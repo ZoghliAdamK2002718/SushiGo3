@@ -1,3 +1,4 @@
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -85,6 +86,18 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 			}
 			players.get(i).setHand(tempHand);
 		}
+	}
+	public void paint(Graphics g)
+	{
+		super.paint(g);
+		g.drawImage(dumpling,0,0,null);
+		g.drawImage(sashimi,100,0,null);
+		g.drawImage(tempura,200,0,null);
+		g.drawImage(maki1,300,0,null);
+		g.drawImage(maki2,400,0,null);
+		g.drawImage(maki3,500,0,null);
+		g.drawImage(wasabi,600,0,null);
+		
 	}
 }
 
