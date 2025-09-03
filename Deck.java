@@ -4,6 +4,7 @@ public class Deck {
     private ArrayList<Card> cards;
     private String[] cardTypes = {"dumpling", "sashimi", "tempura", "maki1", "maki2", "maki3", "wasabi","pudding","eggn","squidn","salmonn","chopsticks"};
     public Deck() {
+        cards = new ArrayList<>();
 	        for(int i = 0;i<14;i++)
             {
                 cards.add(new Card("dumpling"));
@@ -54,7 +55,6 @@ public class Deck {
             }
 
   
-        Collections.shuffle(cards);
         Collections.shuffle(cards);
 
 

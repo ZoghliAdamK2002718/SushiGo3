@@ -24,20 +24,17 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	private Deck sushiDeck = new Deck();
 
 
-	public SushiGoPanel(String type) {
+	public SushiGoPanel() {
 		try {
-			dumpling = ImageIO.read(getClass().getResourceAsStream("images/dumpling.png"));
-			sashimi = ImageIO.read(getClass().getResourceAsStream("images/sashimi.png"));
-			tempura = ImageIO.read(getClass().getResourceAsStream("images/tempura.png"));
-			maki1 = ImageIO.read(getClass().getResourceAsStream("images/maki1.png"));
-			maki2 = ImageIO.read(getClass().getResourceAsStream("images/maki2.png"));
-			maki3 = ImageIO.read(getClass().getResourceAsStream("images/maki3.png"));
-			wasabi = ImageIO.read(getClass().getResourceAsStream("images/wasabi.png"));
-			chopsticks = ImageIO.read(getClass().getResourceAsStream("images/chopsticks.png"));
-			pudding = ImageIO.read(getClass().getResourceAsStream("images/pudding.png"));
-			eggn = ImageIO.read(getClass().getResourceAsStream("images/eggn.png"));
-			squidn = ImageIO.read(getClass().getResourceAsStream("images/squidn.png"));
-			salmonn = ImageIO.read(getClass().getResourceAsStream("images/salmonn.png"));
+			dumpling = ImageIO.read(getClass().getResourceAsStream("/images/sushigo_dumpling.jpg"));
+			sashimi = ImageIO.read(getClass().getResourceAsStream("/images/sushigo_sashimi.jpg"));
+			tempura = ImageIO.read(getClass().getResourceAsStream("/images/sushigo_tempura.jpg"));
+			maki1 = ImageIO.read(getClass().getResourceAsStream("/images/sushigo_maki1.png"));
+			wasabi = ImageIO.read(getClass().getResourceAsStream("/images/sushigo_wasabi.jpg"));
+			chopsticks = ImageIO.read(getClass().getResourceAsStream("/images/sushigo_chopsticks.jpg"));
+			eggn = ImageIO.read(getClass().getResourceAsStream("/images/sushsigo_eggn.jpg"));
+			squidn = ImageIO.read(getClass().getResourceAsStream("/images/sushigo_squidn.jpg"));
+			salmonn = ImageIO.read(getClass().getResourceAsStream("/images/sushigo_salmonn.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			}
@@ -94,8 +91,6 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 		g.drawImage(sashimi,100,0,null);
 		g.drawImage(tempura,200,0,null);
 		g.drawImage(maki1,300,0,null);
-		g.drawImage(maki2,400,0,null);
-		g.drawImage(maki3,500,0,null);
 		g.drawImage(wasabi,600,0,null);
 		
 	}
