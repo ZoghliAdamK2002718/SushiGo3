@@ -55,6 +55,7 @@ public class Deck {
 
   
         Collections.shuffle(cards);
+        Collections.shuffle(cards);
 
 
     }
