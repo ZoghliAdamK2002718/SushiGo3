@@ -6,11 +6,7 @@ public class Hand {
     String[] cardTypes = {"dumpling", "sashimi", "tempura", "maki1", "maki2", "maki3", "wasabi", "chopsticks", "pudding","eggn","squidn","salmonn"};
     public Hand() {
         hand = new ArrayList<Card>();
-        for(int i = 0;i<7;i++)
-        {
-            int rand = (int)(Math.random()*cardTypes.length);
-            hand.add(new Card(cardTypes[rand]));
-        }
+        
     }
     public Card remove(int index) {
         return hand.remove(index);
@@ -29,7 +25,7 @@ public class Hand {
         hand.clear();
     }
     public void fill(Deck deck) {
-        for(int i = 0;i<7;i++)
+        for(int i = 0;i<8;i++)
         {
             hand.add(deck.get(0));
             deck.remove(0);

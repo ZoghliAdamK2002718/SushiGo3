@@ -29,14 +29,14 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 			dumpling = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_dumpling.jpg"));
 			sashimi = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_sashimi.jpg"));
 			tempura = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_tempura.jpg"));
-			maki1 = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_maki1.png"));
-			maki2 = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_maki2.png"));
-			maki3 = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_maki3.png"));
+			maki1 = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_maki1.jpg"));
+			maki2 = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_maki2.jpg"));
+			maki3 = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_maki3.jpg"));
 			wasabi = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_wasabi.jpg"));
 			chopsticks = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_chopsticks.jpg"));
-			eggn = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_eggnigiri.jpg"));
-			salmonn = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_salmonnigiri.jpg"));
-			squidn = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_squidnigiri.jpg"));
+			eggn = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_eggn.jpg"));
+			salmonn = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_salmonn.jpg"));
+			squidn = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_squidn.jpg"));
 			pudding = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_pudding.jpg"));
 
 		} catch (IOException e) {
@@ -51,6 +51,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 		{
 			giveHand(i);
 		}
+
 
 		
 	}
@@ -104,67 +105,64 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	public void paint(Graphics g)
 	{
 		super.paint(g);
-		g.drawImage(dumpling,0,0,200,200,null);
-		g.drawImage(sashimi,100,0,200,200,null);
-		g.drawImage(tempura,200,0,200,200,null);
-		g.drawImage(maki1,300,0,200,200,null);
-		g.drawImage(wasabi,600,0,200,200,null);
+		displayCards(g,0);
 		
 	}
-	public void displayCards()
+	public void displayCards(Graphics g,int index)
 	{
-		Hand h = players.get(0).getHand();
+
+		Hand h = players.get(index).getHand();
 		for(int i = 0;i<h.size();i++)
 		{
 			Card c = h.get(i);
 			String type = c.getType();
 			if(type.equals("dumpling"))
 			{
-				g.drawImage(dumpling,0,0+(i*130),dumpling.getWidth(),dumpling.getHeight(),null);
+				g.drawImage(dumpling,400+(i*130),0,150,210,null);
 			}
 			else if(type.equals("sashimi"))
 			{
-				g.drawImage(sashimi,0,0+(i*130),sashimi.getWidth(),sashimi.getHeight(),null);
+				g.drawImage(sashimi,400+(i*130),0,150,210,null);
 			}
 			else if(type.equals("tempura"))
 			{
-				g.drawImage(tempura,0,0+(i*130),tempura.getWidth(),tempura.getHeight(),null);
+				g.drawImage(tempura,400+(i*130),0,150,210,null);
 			}
 			else if(type.equals("maki1"))
 			{
-				g.drawImage(maki1,0,0+(i*130),maki1.getWidth(),maki1.getHeight(),null);
+				g.drawImage(maki1,400+(i*130),0,150,210,null);
 			}
 			else if(type.equals("maki2"))
 			{
-				g.drawImage(maki2,0,0+(i*130),maki2.getWidth(),maki2.getHeight(),null);
+				g.drawImage(maki2,400+(i*130),0,150,210,null);
 			}
 			else if(type.equals("maki3"))
 			{
-				g.drawImage(maki3,0,0+(i*130),maki3.getWidth(),maki3.getHeight(),null);
+				g.drawImage(maki3,400+(i*130),0,150,210,null);
 			}
 			else if(type.equals("wasabi"))
 			{
-				g.drawImage(wasabi,0,0+(i*130),wasabi.getWidth(),wasabi.getHeight(),null);
+				g.drawImage(wasabi,400+(i*130),0,150,210,null);
 			}
 			else if(type.equals("chopsticks"))
 			{
-				g.drawImage(chopsticks,0,0+(i*130),chopsticks.getWidth(),chopsticks.getHeight(),null);
+				g.drawImage(chopsticks,400+(i*130),0,150,210,null);
 			}
 			else if(type.equals("pudding"))
 			{
-				g.drawImage(pudding,0,0+(i*130),pudding.getWidth(),pudding.getHeight(),null);
+				g.drawImage(pudding,400+(i*130),0,150,210,null);
 			}
-			else if(type.equals("eggnigiri"))
+			else if(type.equals("eggn"))
 			{
-				g.drawImage(eggn,0,0+(i*130),eggn.getWidth(),eggn.getHeight(),null);
+				g.drawImage(eggn,400+(i*130),0,150,210,null);
 			}
-			else if(type.equals("salmonnigiri"))
+			else if(type.equals("salmonn"))
 			{
-				g.drawImage(salmonn,0,0+(i*130),salmonn.getWidth(),salmonn.getHeight(),null);
+				g.drawImage(salmonn,400+(i*130),0,150,210,null);
 			}
-			else if(type.equals("squidnigiri"))
+			else if(type.equals("squidn"))
 			{
-				g.drawImage(squidn,0,0+(i*130),squidn.getWidth(),squidn.getHeight(),null);
+				g.drawImage(squidn,400+(i*130),0,150,210,null);
 			}
 			
 		}
