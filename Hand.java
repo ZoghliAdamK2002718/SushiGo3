@@ -38,4 +38,7 @@ public class Hand {
     public int size() {
         return hand.size();
     }
+    public Card get(int index) {
+        return hand.get(index);
+    }
 }

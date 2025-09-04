@@ -9,6 +9,7 @@ public class SushiFrame extends JFrame {
 		setSize(WIDTH,HEIGHT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		SushiGoPanel panel = new SushiGoPanel();
+		add(panel);
 		setVisible(true);
 	}
 	public static void main(String[]args)
