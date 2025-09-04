@@ -6,6 +6,9 @@ import javax.swing.JPanel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.awt.geom.AffineTransform;
+import java.awt.Rectangle;
+
 
 public class SushiGoPanel extends JPanel implements MouseListener {
 	private BufferedImage dumpling;
@@ -60,12 +63,20 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
-		if (e.getButton() == MouseEvent.BUTTON1) {
-			
-		} else if (e.getButton() == MouseEvent.BUTTON3) {
+		Hand h = players.get(0).getHand();
+		for(int i = 0;i<h.size();i++)
+		{
+			Card c = h.get(i);
+			Rectangle r = c.getRectangle();
+			if(r.contains(x,y))
+			{
+				
+			}
 
-		}
+		} 
 	}
+	public void selectCard(Graphics g,int index)
+	
 
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -118,54 +129,70 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 			String type = c.getType();
 			if(type.equals("dumpling"))
 			{
-				g.drawImage(dumpling,400+(i*130),0,150,210,null);
+				g.drawImage(dumpling,c.setX((430+i*130)),c.setY(getHeight() - 210),150,210,null);
+				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("sashimi"))
 			{
-				g.drawImage(sashimi,400+(i*130),0,150,210,null);
+				g.drawImage(sashimi,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				c.setRectangle(c.getX(), c.getY());
+
 			}
 			else if(type.equals("tempura"))
 			{
-				g.drawImage(tempura,400+(i*130),0,150,210,null);
+				g.drawImage(tempura,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				c.setRectangle(c.getX(), c.getY());
+
 			}
 			else if(type.equals("maki1"))
 			{
-				g.drawImage(maki1,400+(i*130),0,150,210,null);
+				g.drawImage(maki1,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("maki2"))
 			{
-				g.drawImage(maki2,400+(i*130),0,150,210,null);
+				g.drawImage(maki2,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("maki3"))
 			{
-				g.drawImage(maki3,400+(i*130),0,150,210,null);
+				g.drawImage(maki3,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("wasabi"))
 			{
-				g.drawImage(wasabi,400+(i*130),0,150,210,null);
+				g.drawImage(wasabi,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("chopsticks"))
 			{
-				g.drawImage(chopsticks,400+(i*130),0,150,210,null);
+				g.drawImage(chopsticks,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("pudding"))
 			{
-				g.drawImage(pudding,400+(i*130),0,150,210,null);
+				g.drawImage(pudding,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("eggn"))
 			{
-				g.drawImage(eggn,400+(i*130),0,150,210,null);
+				g.drawImage(eggn,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("salmonn"))
 			{
-				g.drawImage(salmonn,400+(i*130),0,150,210,null);
+				g.drawImage(salmonn,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("squidn"))
 			{
-				g.drawImage(squidn,400+(i*130),0,150,210,null);
+				g.drawImage(squidn,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				c.setRectangle(c.getX(), c.getY());
 			}
 			
 		}
+
+
 	}
 }
 
