@@ -12,8 +12,6 @@ public class MouseListenerPanel extends JPanel implements MouseListener {
     private ArrayList<Hand> hands;
     private Deck gameDeck;
     private int players;
-
-    // game state 
     private int playerturn;
     private int round;
     private int cardSelected;
@@ -21,6 +19,7 @@ public class MouseListenerPanel extends JPanel implements MouseListener {
     private boolean cardClicked;
     private boolean roundOver;
     private boolean gameOver;
+    private BufferedImage tableImage;
     
 
 }
