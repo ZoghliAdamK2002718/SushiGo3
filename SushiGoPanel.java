@@ -75,7 +75,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
     int x = e.getX(), y = e.getY();
-    Hand h = players.get(0).getHand();
+    Hand h = players.get(currentPlayerIndex).getHand();
 
     for (int i = 0; i < h.size(); i++) {
         Card c = h.get(i);
@@ -108,44 +108,44 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 			String type = c.getType();
 			if(type.equals("dumpling"))
 			{
-				g.drawImage(dumpling,c.setX((600+i*100)),c.setY(getHeight() - 120),cardWidth,cardHeight,null);
+				g.drawImage(dumpling,c.setX((600+i*125)),c.setY(getHeight() - 120),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("sashimi"))
 			{
-				g.drawImage(sashimi,c.setX(600+i*100),c.setY(getHeight() -120),cardWidth,cardHeight,null);
+				g.drawImage(sashimi,c.setX(600+i*125),c.setY(getHeight() -120),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 
 			}
 			else if(type.equals("tempura"))
 			{
-				g.drawImage(tempura,c.setX(600+i*100),c.setY(getHeight() -120),cardWidth,cardHeight,null);
+				g.drawImage(tempura,c.setX(600+i*125),c.setY(getHeight() -120),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 
 			}
 			else if(type.equals("maki1"))
 			{
-				g.drawImage(maki1,c.setX(600+i*100),c.setY(getHeight() -120),cardWidth,cardHeight,null);
+				g.drawImage(maki1,c.setX(600+i*125),c.setY(getHeight() -120),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("maki2"))
 			{
-				g.drawImage(maki2,c.setX(600+i*100),c.setY(getHeight() -120),cardWidth,cardHeight,null);
+				g.drawImage(maki2,c.setX(600+i*125),c.setY(getHeight() -120),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("maki3"))
 			{
-				g.drawImage(maki3,c.setX(600+i*100),c.setY(getHeight() -120),cardWidth,cardHeight,null);
+				g.drawImage(maki3,c.setX(600+i*125),c.setY(getHeight() -120),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("wasabi"))
 			{
-				g.drawImage(wasabi,c.setX(600+i*100),c.setY(getHeight() -120),cardWidth,cardHeight,null);
+				g.drawImage(wasabi,c.setX(600+i*125),c.setY(getHeight() -120),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("chopsticks"))
 			{
-				g.drawImage(chopsticks,c.setX(600+i*100),c.setY(getHeight() -120),cardWidth,cardHeight,null);
+				g.drawImage(chopsticks,c.setX(600+i*125),c.setY(getHeight() -120),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 	}
@@ -223,7 +223,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	}
 	public void displayCards(Graphics g,int index)
 	{
-
+		g. drawString("Current Player: " + players.get(index).getName(), 50, 50);	
 		Hand h = players.get(index).getHand();
 		ArrayList<Card> played = players.get(index).getPlayedCards();
 
@@ -234,64 +234,64 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 			int y = (i == selectedHandIndex) ? (getHeight() - 140) - 20  : getHeight() - 140;
 			if(type.equals("dumpling"))
 			{
-				g.drawImage(dumpling,c.setX((600+i*100)),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(dumpling,c.setX((600+i*125)),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("sashimi"))
 			{
-				g.drawImage(sashimi,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(sashimi,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 
 			}
 			else if(type.equals("tempura"))
 			{
-				g.drawImage(tempura,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(tempura,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 
 			}
 			else if(type.equals("maki1"))
 			{
-				g.drawImage(maki1,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(maki1,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("maki2"))
 			{
-				g.drawImage(maki2,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(maki2,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("maki3"))
 			{
-				g.drawImage(maki3,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(maki3,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("wasabi"))
 			{
-				g.drawImage(wasabi,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(wasabi,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("chopsticks"))
 			{
-				g.drawImage(chopsticks,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(chopsticks,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("pudding"))
 			{
-				g.drawImage(pudding,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(pudding,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("eggn"))
 			{
-				g.drawImage(eggn,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(eggn,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("salmonn"))
 			{
-				g.drawImage(salmonn,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(salmonn,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("squidn"))
 			{
-				g.drawImage(squidn,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(squidn,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			
@@ -311,64 +311,64 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 			int y = (i == selectedHandIndex) ? (getHeight() - 320) - 20  : getHeight() - 320;
 			if(type.equals("dumpling"))
 			{
-				g.drawImage(dumpling,c.setX((600+i*100)),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(dumpling,c.setX((600+i*125)),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("sashimi"))
 			{
-				g.drawImage(sashimi,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(sashimi,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 
 			}
 			else if(type.equals("tempura"))
 			{
-				g.drawImage(tempura,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(tempura,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 
 			}
 			else if(type.equals("maki1"))
 			{
-				g.drawImage(maki1,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(maki1,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("maki2"))
 			{
-				g.drawImage(maki2,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(maki2,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("maki3"))
 			{
-				g.drawImage(maki3,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(maki3,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("wasabi"))
 			{
-				g.drawImage(wasabi,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(wasabi,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("chopsticks"))
 			{
-				g.drawImage(chopsticks,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(chopsticks,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("pudding"))
 			{
-				g.drawImage(pudding,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(pudding,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("eggn"))
 			{
-				g.drawImage(eggn,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(eggn,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("salmonn"))
 			{
-				g.drawImage(salmonn,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(salmonn,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("squidn"))
 			{
-				g.drawImage(squidn,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				g.drawImage(squidn,c.setX(600+i*125),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			
