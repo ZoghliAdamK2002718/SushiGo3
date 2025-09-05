@@ -25,6 +25,9 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	private BufferedImage salmonn;
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private Deck sushiDeck = new Deck();
+	private int selectedHandIndex;
+	private static final int cardWidth = 100;
+	private static final int cardHeight = 140;
 
 
 	public SushiGoPanel() {
@@ -54,6 +57,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 		{
 			giveHand(i);
 		}
+		selectedHandIndex = -1;
 
 
 		
@@ -61,21 +65,96 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		int x = e.getX();
-		int y = e.getY();
-		Hand h = players.get(0).getHand();
-		for(int i = 0;i<h.size();i++)
-		{
-			Card c = h.get(i);
-			Rectangle r = c.getRectangle();
-			if(r.contains(x,y))
-			{
-				
-			}
+    int x = e.getX(), y = e.getY();
+    Hand h = players.get(0).getHand();
 
-		} 
+    for (int i = 0; i < h.size(); i++) {
+        Card c = h.get(i);
+        Rectangle r = c.getRectangle();
+        if (r != null && r.contains(x, y)) {
+
+            if (selectedHandIndex == i) {
+                playSelectedCard(0);
+            } else {
+                selectedHandIndex = i;
+                repaint();
+            }
+            break;
+        }
+    }
+}
+	public void selectCard(Graphics g,int index, int i)
+	{
+		Hand h = players.get(index).getHand();
+			Card c = h.get(i);
+			String type = c.getType();
+			if(type.equals("dumpling"))
+			{
+				g.drawImage(dumpling,c.setX((600+i*100)),c.setY(getHeight() - 120),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+			}
+			else if(type.equals("sashimi"))
+			{
+				g.drawImage(sashimi,c.setX(600+i*100),c.setY(getHeight() -120),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+
+			}
+			else if(type.equals("tempura"))
+			{
+				g.drawImage(tempura,c.setX(600+i*100),c.setY(getHeight() -120),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+
+			}
+			else if(type.equals("maki1"))
+			{
+				g.drawImage(maki1,c.setX(600+i*100),c.setY(getHeight() -120),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+			}
+			else if(type.equals("maki2"))
+			{
+				g.drawImage(maki2,c.setX(600+i*100),c.setY(getHeight() -120),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+			}
+			else if(type.equals("maki3"))
+			{
+				g.drawImage(maki3,c.setX(600+i*100),c.setY(getHeight() -120),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+			}
+			else if(type.equals("wasabi"))
+			{
+				g.drawImage(wasabi,c.setX(600+i*100),c.setY(getHeight() -120),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+			}
+			else if(type.equals("chopsticks"))
+			{
+				g.drawImage(chopsticks,c.setX(600+i*100),c.setY(getHeight() -120),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+			}
 	}
-	public void selectCard(Graphics g,int index)
+	public void selectCard(int playerIndex, int handIndex)
+	{
+    selectedHandIndex = (selectedHandIndex == handIndex) ? -1 : handIndex;
+    repaint();
+	}
+	public void playSelectedCard(int playerIndex) 
+	{
+    if (selectedHandIndex < 0) return;
+
+    Player p = players.get(playerIndex);
+    Hand h = p.getHand();
+
+    if (selectedHandIndex >= h.size()) {
+        selectedHandIndex = -1;
+        return;
+    }
+
+    Card played = h.remove(selectedHandIndex);
+
+    p.addPlayedCard(played);      
+    selectedHandIndex = -1;
+    repaint();
+	}
+
 	
 
 	@Override
@@ -117,76 +196,157 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	{
 		super.paint(g);
 		displayCards(g,0);
+		displayPlayedCards(g,0);
 		
 	}
 	public void displayCards(Graphics g,int index)
 	{
 
 		Hand h = players.get(index).getHand();
+		ArrayList<Card> played = players.get(index).getPlayedCards();
+
 		for(int i = 0;i<h.size();i++)
 		{
 			Card c = h.get(i);
 			String type = c.getType();
+			int y = (i == selectedHandIndex) ? (getHeight() - 140) - 20  : getHeight() - 140;
 			if(type.equals("dumpling"))
 			{
-				g.drawImage(dumpling,c.setX((430+i*130)),c.setY(getHeight() - 210),150,210,null);
+				g.drawImage(dumpling,c.setX((600+i*100)),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("sashimi"))
 			{
-				g.drawImage(sashimi,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				g.drawImage(sashimi,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 
 			}
 			else if(type.equals("tempura"))
 			{
-				g.drawImage(tempura,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				g.drawImage(tempura,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 
 			}
 			else if(type.equals("maki1"))
 			{
-				g.drawImage(maki1,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				g.drawImage(maki1,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("maki2"))
 			{
-				g.drawImage(maki2,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				g.drawImage(maki2,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("maki3"))
 			{
-				g.drawImage(maki3,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				g.drawImage(maki3,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("wasabi"))
 			{
-				g.drawImage(wasabi,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				g.drawImage(wasabi,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("chopsticks"))
 			{
-				g.drawImage(chopsticks,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				g.drawImage(chopsticks,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("pudding"))
 			{
-				g.drawImage(pudding,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				g.drawImage(pudding,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("eggn"))
 			{
-				g.drawImage(eggn,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				g.drawImage(eggn,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("salmonn"))
 			{
-				g.drawImage(salmonn,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				g.drawImage(salmonn,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			else if(type.equals("squidn"))
 			{
-				g.drawImage(squidn,c.setX(430+i*130),c.setY(getHeight() -210),150,210,null);
+				g.drawImage(squidn,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+			}
+			
+		}
+
+
+	}
+	public void displayPlayedCards(Graphics g,int index)
+	{
+
+		ArrayList<Card> played = players.get(index).getPlayedCards();
+
+		for(int i = 0;i<played.size();i++)
+		{
+			Card c = played.get(i);
+			String type = c.getType();
+			int y = (i == selectedHandIndex) ? (getHeight() - 320) - 20  : getHeight() - 320;
+			if(type.equals("dumpling"))
+			{
+				g.drawImage(dumpling,c.setX((600+i*100)),c.setY(y),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+			}
+			else if(type.equals("sashimi"))
+			{
+				g.drawImage(sashimi,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+
+			}
+			else if(type.equals("tempura"))
+			{
+				g.drawImage(tempura,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+
+			}
+			else if(type.equals("maki1"))
+			{
+				g.drawImage(maki1,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+			}
+			else if(type.equals("maki2"))
+			{
+				g.drawImage(maki2,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+			}
+			else if(type.equals("maki3"))
+			{
+				g.drawImage(maki3,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+			}
+			else if(type.equals("wasabi"))
+			{
+				g.drawImage(wasabi,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+			}
+			else if(type.equals("chopsticks"))
+			{
+				g.drawImage(chopsticks,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+			}
+			else if(type.equals("pudding"))
+			{
+				g.drawImage(pudding,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+			}
+			else if(type.equals("eggn"))
+			{
+				g.drawImage(eggn,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+			}
+			else if(type.equals("salmonn"))
+			{
+				g.drawImage(salmonn,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+			}
+			else if(type.equals("squidn"))
+			{
+				g.drawImage(squidn,c.setX(600+i*100),c.setY(y),cardWidth,cardHeight,null);
 				c.setRectangle(c.getX(), c.getY());
 			}
 			

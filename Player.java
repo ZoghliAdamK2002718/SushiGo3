@@ -86,4 +86,8 @@ public class Player {
     {
         this.hand = h;
     }
+    public void addPlayedCard(Card c)
+    {
+        playedCards.add(c);
+    }
 }
