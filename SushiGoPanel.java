@@ -28,6 +28,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	private int selectedHandIndex;
 	private static final int cardWidth = 100;
 	private static final int cardHeight = 140;
+	private int currentPlayerIndex = 0;
 
 
 	public SushiGoPanel() {
@@ -58,7 +59,15 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 			giveHand(i);
 		}
 		selectedHandIndex = -1;
-
+		while(players.get(3).returnHasPlayedCard() == false)
+		{
+			for(int i = 0;i<players.size();i++)
+			{
+				players.get(i).selectCard(i);
+				players.get(i).playCard();
+				repaint();
+			}
+		}
 
 		
 	}
@@ -74,7 +83,16 @@ public class SushiGoPanel extends JPanel implements MouseListener {
         if (r != null && r.contains(x, y)) {
 
             if (selectedHandIndex == i) {
-                playSelectedCard(0);
+                playSelectedCard(currentPlayerIndex);
+				currentPlayerIndex++;
+				if (currentPlayerIndex >= players.size()) {
+					currentPlayerIndex = 0;
+					for(Player p: players)
+					{
+						p.resetForNewTurn();
+					}
+				}
+				
             } else {
                 selectedHandIndex = i;
                 repaint();
@@ -195,8 +213,12 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	public void paint(Graphics g)
 	{
 		super.paint(g);
-		displayCards(g,0);
-		displayPlayedCards(g,0);
+		displayCards(g,currentPlayerIndex);
+		for(int i = 0;i<players.size();i++)
+		{
+			displayPlayedCards(g,i);
+		}
+		
 		
 	}
 	public void displayCards(Graphics g,int index)
