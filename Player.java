@@ -23,22 +23,24 @@ public class Player {
     public int getPlayerIndex() { return playerIndex; }
     public int getScore() { return score; }
     public void addScore(int delta) { score += delta; }
+    public boolean returnHasPlayedCard() { return hasPlayedCard; }
 
     public Hand getHand() { return hand; }
     public void setHand(Hand h) { this.hand = h; }
 
     public ArrayList<Card> getPlayedCards() { return playedCards; }
     public Card getLastPlayedCard() { return lastPlayedCard; }
-    public boolean hasPlayedThisTurn() { return hasPlayedCard; }
+    public void hasPlayedThisTurn() { hasPlayedCard=true; }
+    public void resetForNewTurn() { hasPlayedCard = false; selectedIndex = -1; }
     public int getSelectedIndex() { return selectedIndex; }
 
     public void selectCard(int index) {
         if (index >= 0 && index < hand.size()) {
             selectedIndex = index;
-            hasPlayedCard = false;
         } else {
             selectedIndex = -1;
         }
+        hasPlayedThisTurn();
     }
 
     public void playCard() {
@@ -70,11 +72,6 @@ public class Player {
         throw new IllegalStateException("No Chopsticks available to use.");
     }
 
-    public void resetForNewTurn() {
-        hasPlayedCard = false;
-        selectedIndex = -1;
-        lastPlayedCard = null;
-    }
 
     public void endRound() {
         playedCards.removeIf(c -> !"pudding".equals(c.getType()));
