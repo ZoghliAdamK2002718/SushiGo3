@@ -6,8 +6,9 @@ import javax.swing.JPanel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.awt.geom.AffineTransform;
 import java.awt.Rectangle;
+import java.awt.Graphics2D;
+
 
 
 public class SushiGoPanel extends JPanel implements MouseListener {
@@ -23,6 +24,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	private BufferedImage eggn;
 	private BufferedImage squidn;
 	private BufferedImage salmonn;
+	private BufferedImage back;
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private Deck sushiDeck = new Deck();
 	private int selectedHandIndex;
@@ -45,7 +47,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 			salmonn = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_salmonn.jpg"));
 			squidn = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_squidn.jpg"));
 			pudding = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_pudding.jpg"));
-
+			back = ImageIO.read(SushiGoPanel.class.getResource("/images/sushsigo_back.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			}
@@ -59,15 +61,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 			giveHand(i);
 		}
 		selectedHandIndex = -1;
-		while(players.get(3).returnHasPlayedCard() == false)
-		{
-			for(int i = 0;i<players.size();i++)
-			{
-				players.get(i).selectCard(i);
-				players.get(i).playCard();
-				repaint();
-			}
-		}
+		
 
 		
 	}
@@ -91,6 +85,8 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 					{
 						p.resetForNewTurn();
 					}
+					passCardstoLeft();
+					
 				}
 				
             } else {
@@ -100,7 +96,40 @@ public class SushiGoPanel extends JPanel implements MouseListener {
             break;
         }
     }
+	}
+	public void passCardstoLeft()
+	{
+		Hand temp = players.get(0).getHand();
+		for(int i = 0;i<players.size()-1;i++)
+		{
+			players.get(i).setHand(players.get(i+1).getHand());
+		}
+		players.get(players.size()-1).setHand(temp);
+		repaint();
+	}
+	public void displayOtherPlayerCards(Graphics g)
+	{
+		
+	}
+	private void drawImageRotated(Graphics g, BufferedImage img,int x, int y, int w, int h, double radians) 
+	{
+    Graphics2D g2 = (Graphics2D) g.create();
+    g2.translate(x + w/2, y + h/2);
+    g2.rotate(radians);
+    g2.drawImage(img, -w/2, -h/2, w, h, null);
+    g2.dispose();
+	}
+	private double seatAngle(int seat) {
+    return switch (seat) {
+        case 0 -> 0.0;              
+        case 1 -> Math.PI / 2;  
+        case 2 -> Math.PI;           
+        case 3 -> 3 * Math.PI / 2;    
+        default -> 0.0;
+    };
 }
+
+
 	public void selectCard(Graphics g,int index, int i)
 	{
 		Hand h = players.get(index).getHand();
@@ -214,15 +243,13 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	{
 		super.paint(g);
 		displayCards(g,currentPlayerIndex);
-		for(int i = 0;i<players.size();i++)
-		{
-			displayPlayedCards(g,i);
-		}
+		
 		
 		
 	}
 	public void displayCards(Graphics g,int index)
 	{
+		displayPlayedCards(g, index);
 		g. drawString("Current Player: " + players.get(index).getName(), 50, 50);	
 		Hand h = players.get(index).getHand();
 		ArrayList<Card> played = players.get(index).getPlayedCards();
