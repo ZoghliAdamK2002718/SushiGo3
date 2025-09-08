@@ -47,7 +47,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 			salmonn = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_salmonn.jpg"));
 			squidn = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_squidn.jpg"));
 			pudding = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_pudding.jpg"));
-			back = ImageIO.read(SushiGoPanel.class.getResource("/images/sushsigo_back.jpg"));
+			back = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_back.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			}
