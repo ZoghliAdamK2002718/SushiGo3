@@ -18,7 +18,9 @@ public class Player {
         this.playerIndex = playerIndex;
         this.score = 0;
     }
-
+    public boolean hasOneCard() {
+        return hand.size() == 1;
+    }
     public String getName() { return name; }
     public int getPlayerIndex() { return playerIndex; }
     public int getScore() { return score; }

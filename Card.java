@@ -7,12 +7,18 @@ public class Card {
 	private int x;
 	private int y;
 	private Rectangle coords;
+	private boolean isPlayed = false;
 
 	public Card(String t) {
 		this.type = t;
-		coords = new Rectangle(x, y, 150, 210);
+		coords = new Rectangle(x, y, 100, 140);
 	}
-
+	public void played() {
+		isPlayed = true;
+	}
+	public boolean isPlayed() {
+		return isPlayed;
+	}
 	public String getType() {
 		return type;
 	}
@@ -33,7 +39,7 @@ public class Card {
 		return y;
 	}
 	public void setRectangle(int x, int y) {
-		coords.setRect(x, y, 150, 210);
+		coords.setRect(x, y, 100, 140);
 	}
 	public Rectangle getRectangle() {
 		return coords;

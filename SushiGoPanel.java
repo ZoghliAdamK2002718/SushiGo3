@@ -71,13 +71,14 @@ public class SushiGoPanel extends JPanel implements MouseListener {
     int x = e.getX(), y = e.getY();
     Hand h = players.get(currentPlayerIndex).getHand();
 
-    for (int i = 0; i < h.size(); i++) {
+    for (int i = 0; i < h.size()-1; i++) {
         Card c = h.get(i);
         Rectangle r = c.getRectangle();
         if (r != null && r.contains(x, y)) {
 
             if (selectedHandIndex == i) {
                 playSelectedCard(currentPlayerIndex);
+				c.played();
 				currentPlayerIndex++;
 				if (currentPlayerIndex >= players.size()) {
 					currentPlayerIndex = 0;
@@ -86,6 +87,11 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 						p.resetForNewTurn();
 					}
 					passCardstoLeft();
+					if(players.get(0).hasOneCard())
+					{
+						// End of round logic here
+						System.out.println("Round over. Calculate scores and start new round.");
+					}
 					
 				}
 				
@@ -126,48 +132,92 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	};
 	}
 	public void displayOtherPlayerCards(Graphics g) {
+    int spacing = 125;
+
     for (int i = 0; i < players.size(); i++) {
-        if (i == currentPlayerIndex) continue; // Skip current player
+        if (i == currentPlayerIndex) continue;
+
+        // Calculate relative seat position
+        int relativeSeat = (i - currentPlayerIndex + 4) % 4;
 
         Hand h = players.get(i).getHand();
-        double angle = seatAngle(i);
+        double angle = seatAngle(relativeSeat);
 
         for (int j = 0; j < h.size(); j++) {
-            Card c = h.get(j);
             BufferedImage img = getCardImage("back");
-
             if (img == null) continue;
 
-            int x = 0, y = 0;
+            int centerX = 0, centerY = 0;
 
-            switch (i) {
-                case 1: // Right side
-                    x = getWidth() - 150;
-                    y = 100 + j * (cardHeight / 3);
+            switch (relativeSeat) {
+                case 1: // Left
+                    centerX = cardHeight / 2 + 20;
+                    centerY = 100 + j * spacing;
                     break;
                 case 2: // Top
-                    x = getWidth() / 2 - h.size() * (cardWidth / 2) + j * (cardWidth / 2);
-                    y = 50;
+                    centerX = getWidth() / 2 - (h.size() * spacing) / 2 + j * spacing;
+                    centerY = cardHeight / 2 + 20;
                     break;
-                case 3: // Left side
-                    x = 50;
-                    y = 100 + j * (cardHeight / 3);
+                case 3: // Right
+                    centerX = getWidth() - cardHeight / 2 - 20;
+                    centerY = 100 + j * spacing;
                     break;
             }
 
-            drawImageRotated(g, img, x, y, cardWidth, cardHeight, angle);
+            drawImageRotated(g, img, centerX, centerY, cardWidth, cardHeight, angle);
+        	}
+    	}
+	}
+	public void displayOtherPlayerPlayedCards(Graphics g) {
+    int spacing = 125;
+
+    for (int i = 0; i < players.size(); i++) {
+        if (i == currentPlayerIndex) continue;
+
+        int relativeSeat = (i - currentPlayerIndex + 4) % 4;
+
+        ArrayList<Card> played = players.get(i).getPlayedCards();
+        double angle = seatAngle(relativeSeat);
+
+        for (int j = 0; j < played.size(); j++) {
+            Card c = played.get(j);
+            BufferedImage img = getCardImage(c.getType());
+            if (img == null) continue;
+
+            int centerX = 0, centerY = 0;
+
+            switch (relativeSeat) {
+                case 1: // Left
+                    centerX = cardHeight / 2 + 250;
+                    centerY = 100 + j * spacing;
+                    break;
+                case 2: // Top
+                    centerX = getWidth() / 2 - (played.size() * spacing) / 2 + j * spacing;
+                    centerY = cardHeight / 2 + 250;
+                    break;
+                case 3: // Right
+                    centerX = getWidth() - cardHeight / 2 - 250;
+                    centerY = 100 + j * spacing;
+                    break;
+            }
+
+            drawImageRotated(g, img, centerX, centerY, cardWidth, cardHeight, angle);
         }
     }
 }
 
-	private void drawImageRotated(Graphics g, BufferedImage img,int x, int y, int w, int h, double radians) 
-	{
+
+
+
+
+	private void drawImageRotated(Graphics g, BufferedImage img, int centerX, int centerY, int w, int h, double radians) {
     Graphics2D g2 = (Graphics2D) g.create();
-    g2.translate(x + w/2, y + h/2);
-    g2.rotate(radians);
-    g2.drawImage(img, -w/2, -h/2, w, h, null);
+    g2.translate(centerX, centerY); // move to center
+    g2.rotate(radians);             // rotate around center
+    g2.drawImage(img, -w / 2, -h / 2, w, h, null); // draw centered
     g2.dispose();
-	}
+}
+
 	private double seatAngle(int seat) {
     return switch (seat) {
         case 0 -> 0.0;              
@@ -184,7 +234,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 		Hand h = players.get(index).getHand();
 			Card c = h.get(i);
 			String type = c.getType();
-			g.drawImage(getCardImage(type),c.setX((600+i*125)),c.setY(getHeight() - 120),cardWidth,cardHeight,null);
+			g.drawImage(getCardImage(type),c.setX((500+i*125)),c.setY(getHeight() - 120),cardWidth,cardHeight,null);
 			c.setRectangle(c.getX(), c.getY());
 	}
 	public void selectCard(int playerIndex, int handIndex)
@@ -256,6 +306,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	{
 		displayPlayedCards(g, index);
 		displayOtherPlayerCards(g);
+		displayOtherPlayerPlayedCards(g);
 		g. drawString("Current Player: " + players.get(index).getName(), 50, 50);	
 		Hand h = players.get(index).getHand();
 		ArrayList<Card> played = players.get(index).getPlayedCards();
@@ -265,7 +316,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 			Card c = h.get(i);
 			String type = c.getType();
 			int y = (i == selectedHandIndex) ? (getHeight() - 140) - 20  : getHeight() - 140;
-			g.drawImage(getCardImage(type),c.setX((600+i*125)),c.setY(y),cardWidth,cardHeight,null);
+			g.drawImage(getCardImage(type),c.setX((500+i*125)),c.setY(y),cardWidth,cardHeight,null);
 			c.setRectangle(c.getX(), c.getY());
 		}
 
@@ -281,7 +332,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 			Card c = played.get(i);
 			String type = c.getType();
 			int y = (i == selectedHandIndex) ? (getHeight() - 320) - 20  : getHeight() - 320;
-			g.drawImage(getCardImage(type),c.setX((600+i*125)),c.setY(y),cardWidth,cardHeight,null);
+			g.drawImage(getCardImage(type),c.setX((500+i*125)),c.setY(y),cardWidth,cardHeight,null);
 			c.setRectangle(c.getX(), c.getY());
 		}
 
