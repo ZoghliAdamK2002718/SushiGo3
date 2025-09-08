@@ -297,6 +297,8 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	public void paint(Graphics g)
 	{
 		super.paint(g);
+		g.setColor(java.awt.Color.BLACK);
+    	g.fillRect(0, 0, getWidth(), getHeight());
 		displayCards(g,currentPlayerIndex);
 		
 		
