@@ -200,7 +200,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
                     centerY = 100 + j * spacing;
                     break;
             }
-
+			
             drawImageRotated(g, img, centerX, centerY, cardWidth, cardHeight, angle);
         }
     }
@@ -334,8 +334,28 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 			Card c = played.get(i);
 			String type = c.getType();
 			int y = (i == selectedHandIndex) ? (getHeight() - 320) - 20  : getHeight() - 320;
+			if(type.equals("eggn") || type.equals("salmonn") || type.equals("squidn"))
+			{
+				if(players.get(index).hasWasabi())
+				{
+					Card cW = played.get(players.get(index).getIndexOfWasabi());
+					if(!cW.hasPaired())
+					{
+					g.drawImage(getCardImage(type),c.setX(cW.getX()),c.setY(y - 20),cardWidth,cardHeight,null);
+					cW.setRectangle(cW.getX(), cW.getY());
+					cW.pair();
+					}
+				}
+				else{
+				g.drawImage(getCardImage(type),c.setX((500+i*125)),c.setY(y),cardWidth,cardHeight,null);
+				c.setRectangle(c.getX(), c.getY());
+				}
+			}
+			else {
 			g.drawImage(getCardImage(type),c.setX((500+i*125)),c.setY(y),cardWidth,cardHeight,null);
 			c.setRectangle(c.getX(), c.getY());
+			}
+			
 		}
 
 
