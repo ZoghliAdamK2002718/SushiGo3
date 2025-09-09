@@ -8,10 +8,19 @@ public class Card {
 	private int y;
 	private Rectangle coords;
 	private boolean isPlayed = false;
+	private boolean isPaired = false;
 
 	public Card(String t) {
 		this.type = t;
 		coords = new Rectangle(x, y, 100, 140);
+	}
+	public boolean hasPaired()
+	{
+		return isPaired;
+	}
+	public void pair()
+	{
+		isPaired = true;
 	}
 	public void played() {
 		isPlayed = true;
