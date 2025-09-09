@@ -8,6 +8,14 @@ public class Hand {
         hand = new ArrayList<Card>();
         
     }
+    public boolean hasWasabi() {
+        for(Card c: hand) {
+            if(c.getType().equals("wasabi")) {
+                return true;
+            }
+        }
+        return false;
+    }
     public Card remove(int index) {
         return hand.remove(index);
     }
@@ -16,6 +24,14 @@ public class Hand {
     }
     public int indexOf(Card card) {
         return hand.indexOf(card);
+    }
+    public int indexOf(String type) {
+        for(int i = 0;i<hand.size();i++) {
+            if(hand.get(i).getType().equals(type)) {
+                return i;
+            }
+        }
+        return -1;
     }
     public void add(Card card) {
         hand.add(card);
