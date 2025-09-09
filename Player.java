@@ -21,6 +21,22 @@ public class Player {
     public boolean hasOneCard() {
         return hand.size() == 1;
     }
+    public boolean hasWasabi() {
+        for(int i = 0;i<playedCards.size();i++) {
+            if(playedCards.get(i).getType().equals("wasabi")) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public int getIndexOfWasabi() {
+        for(int i = 0;i<playedCards.size();i++) {
+            if(playedCards.get(i).getType().equals("wasabi")) {
+                return i;
+            }
+        }
+        return -1;
+    }
     public String getName() { return name; }
     public int getPlayerIndex() { return playerIndex; }
     public int getScore() { return score; }
