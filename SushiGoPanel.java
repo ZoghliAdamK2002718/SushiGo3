@@ -8,6 +8,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.awt.Rectangle;
 import java.awt.Graphics2D;
+import javax.lang.model.util.ElementScanner14;
 
 
 
@@ -31,6 +32,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	private static final int cardWidth = 100;
 	private static final int cardHeight = 140;
 	private int currentPlayerIndex = 0;
+	private int currentRound;
 
 
 	public SushiGoPanel() {
@@ -71,7 +73,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
     int x = e.getX(), y = e.getY();
     Hand h = players.get(currentPlayerIndex).getHand();
 
-    for (int i = 0; i < h.size()-1; i++) {
+    for (int i = 0; i < h.size(); i++) {
         Card c = h.get(i);
         Rectangle r = c.getRectangle();
         if (r != null && r.contains(x, y)) {
@@ -89,7 +91,10 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 					passCardstoLeft();
 					if(players.get(0).hasOneCard())
 					{
-						// End of round logic here
+						for(int j = 0;j<players.size();j++)
+						{
+
+						}
 						System.out.println("Round over. Calculate scores and start new round.");
 					}
 					
@@ -102,6 +107,17 @@ public class SushiGoPanel extends JPanel implements MouseListener {
             break;
         }
     }
+	}
+	public void calculateScores()
+	{
+		for(int i = 0;i<players.size();i++)
+		{
+			ArrayList<Card> pC = players.get(i).getPlayedCards();
+			if(pC.get(i).getType().equals("maki1"))
+			{
+
+			}
+		}
 	}
 	public void passCardstoLeft()
 	{
@@ -137,7 +153,6 @@ public class SushiGoPanel extends JPanel implements MouseListener {
     for (int i = 0; i < players.size(); i++) {
         if (i == currentPlayerIndex) continue;
 
-        // Calculate relative seat position
         int relativeSeat = (i - currentPlayerIndex + 4) % 4;
 
         Hand h = players.get(i).getHand();
@@ -187,15 +202,15 @@ public class SushiGoPanel extends JPanel implements MouseListener {
             int centerX = 0, centerY = 0;
 
             switch (relativeSeat) {
-                case 1: // Left
+                case 1: 
                     centerX = cardHeight / 2 + 250;
                     centerY = 100 + j * spacing;
                     break;
-                case 2: // Top
+                case 2: 
                     centerX = getWidth() / 2 - (played.size() * spacing) / 2 + j * spacing;
                     centerY = cardHeight / 2 + 250;
                     break;
-                case 3: // Right
+                case 3: 
                     centerX = getWidth() - cardHeight / 2 - 250;
                     centerY = 100 + j * spacing;
                     break;
@@ -212,9 +227,9 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 
 	private void drawImageRotated(Graphics g, BufferedImage img, int centerX, int centerY, int w, int h, double radians) {
     Graphics2D g2 = (Graphics2D) g.create();
-    g2.translate(centerX, centerY); // move to center
-    g2.rotate(radians);             // rotate around center
-    g2.drawImage(img, -w / 2, -h / 2, w, h, null); // draw centered
+    g2.translate(centerX, centerY); 
+    g2.rotate(radians);             
+    g2.drawImage(img, -w / 2, -h / 2, w, h, null); 
     g2.dispose();
 }
 
@@ -240,6 +255,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	public void selectCard(int playerIndex, int handIndex)
 	{
     selectedHandIndex = (selectedHandIndex == handIndex) ? -1 : handIndex;
+	
     repaint();
 	}
 	public void playSelectedCard(int playerIndex) 
@@ -256,26 +272,53 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 
     Card played = h.remove(selectedHandIndex);
 
+	if (isNigiri(played) && p.hasWasabi()) {
+        int wasabiIndex = p.getIndexOfWasabi();
+        Card wasabi = p.getPlayedCards().get(wasabiIndex);
+
+        if (!wasabi.hasPaired()) {
+            wasabi.pair();
+            wasabi.setPairedCard(played); 
+            played.pair();
+        }
+    }
+	if(isPudding(played))
+	{
+		players.get(playerIndex).addToPudding(played);
+	}
     p.addPlayedCard(played);      
     selectedHandIndex = -1;
     repaint();
 	}
+	public boolean isPudding(Card c)
+	{
+		if(c.getType().equals("pudding"))
+		{
+			return true;
+		}
+		return false;
+	}
+	public boolean isNigiri(Card c)
+	{
+		if(c.getType().equals("salmonn") || c.getType().equals("eggn") || c.getType().equals("squidn"))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
-	
-
-	@Override
 	public void mousePressed(MouseEvent e) {
 	}
 
-	@Override
 	public void mouseReleased(MouseEvent e) {
 	}
 
-	@Override
 	public void mouseEntered(MouseEvent e) {
 	}
 
-	@Override
 	public void mouseExited(MouseEvent e) {
 	}
 	public void loadPlayers(String[] n)
@@ -324,46 +367,49 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 
 
 	}
-	public void displayPlayedCards(Graphics g,int index)
-	{
-
-		ArrayList<Card> played = players.get(index).getPlayedCards();
-
-		for(int i = 0;i<played.size();i++)
-		{
-			Card c = played.get(i);
-			String type = c.getType();
-			int y = (i == selectedHandIndex) ? (getHeight() - 320) - 20  : getHeight() - 320;
-			if(type.equals("eggn") || type.equals("salmonn") || type.equals("squidn"))
-			{
-				if(players.get(index).hasWasabi())
-				{
-					Card cW = played.get(players.get(index).getIndexOfWasabi());
-					if(!cW.hasPaired())
-					{
-					g.drawImage(getCardImage(type),c.setX(cW.getX()),c.setY(y - 20),cardWidth,cardHeight,null);
-					cW.setRectangle(cW.getX(), cW.getY());
-					cW.pair();
-					}
-					else
-					{
-						g.drawImage(getCardImage(type),c.setX((500+i*125)),c.setY(y),cardWidth,cardHeight,null);
-						c.setRectangle(c.getX(), c.getY());
-					}
-				}
-				else{
-				g.drawImage(getCardImage(type),c.setX((500+i*125)),c.setY(y),cardWidth,cardHeight,null);
-				c.setRectangle(c.getX(), c.getY());
-				}
-			}
-			else {
-			g.drawImage(getCardImage(type),c.setX((500+i*125)),c.setY(y),cardWidth,cardHeight,null);
-			c.setRectangle(c.getX(), c.getY());
-			}
-			
-		}
-
-
+	private boolean isPairedToWasabi(Card nigiri, ArrayList<Card> playedCards) {
+    for (Card c : playedCards) {
+        if (c.getType().equals("wasabi") && c.hasPaired() && c.getPairedCard() == nigiri) {
+            return true;
+        }
+    }
+    return false;
 	}
+	public void displayPlayedCards(Graphics g, int index) {
+    ArrayList<Card> played = players.get(index).getPlayedCards();
+    int drawnCount = 0; 
+
+    for (Card c : played) {
+        String type = c.getType();
+        int x = 500 + drawnCount * 125;
+        int y = (drawnCount == selectedHandIndex) ? (getHeight() - 320) - 20 : getHeight() - 320;
+
+        if (type.equals("wasabi") && c.hasPaired()) {
+            g.drawImage(getCardImage("wasabi"), x, y, cardWidth, cardHeight, null);
+
+            Card nigiri = c.getPairedCard();
+            if (nigiri != null) {
+                g.drawImage(getCardImage(nigiri.getType()), x, y - 20, cardWidth, cardHeight, null);
+            }
+
+            c.setX(x);
+            c.setY(y);
+            c.setRectangle(x, y);
+            drawnCount++; 
+
+        } else if (isNigiri(c) && isPairedToWasabi(c, played)) {
+            continue;
+
+        } else {
+            g.drawImage(getCardImage(type), x, y, cardWidth, cardHeight, null);
+            c.setX(x);
+            c.setY(y);
+            c.setRectangle(x, y);
+            drawnCount++;
+        }
+    }
+	}
+
+
 }
 

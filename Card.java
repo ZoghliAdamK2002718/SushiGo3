@@ -9,10 +9,19 @@ public class Card {
 	private Rectangle coords;
 	private boolean isPlayed = false;
 	private boolean isPaired = false;
+	private Card pairedCard = null;
 
 	public Card(String t) {
 		this.type = t;
 		coords = new Rectangle(x, y, 100, 140);
+	}
+	public boolean equals(String s)
+	{
+		if(s.equals(type))
+		{
+			return true;
+		}
+		return false;
 	}
 	public boolean hasPaired()
 	{
@@ -53,6 +62,16 @@ public class Card {
 	public Rectangle getRectangle() {
 		return coords;
 	}
+	public void setPairedCard(Card c)
+	{
+		pairedCard = c;
+	}
+	
+	public Card getPairedCard()
+	{
+		return pairedCard;
+	}
+
 	
 
 }

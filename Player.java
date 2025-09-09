@@ -5,6 +5,10 @@ public class Player {
     private int score;
     private final String name;
     private final int playerIndex;
+    private int makiRollCount;
+    private int sashimiCount;
+    private int tempuraCount;
+    private ArrayList<Card> puddings;
 
 
     private ArrayList<Card> playedCards = new ArrayList<>();
@@ -17,6 +21,10 @@ public class Player {
         this.name = name;              
         this.playerIndex = playerIndex;
         this.score = 0;
+    }
+    public void addToPudding(Card c)
+    {
+        puddings.add(c);
     }
     public boolean hasOneCard() {
         return hand.size() == 1;
@@ -37,10 +45,48 @@ public class Player {
         }
         return -1;
     }
+    public void makiRollCount()
+    {
+        for(int i = 0;i<playedCards.size();i++)
+        {
+            if(playedCards.get(i).getType().equals("maki1"))
+            {
+                makiRollCount += 1;
+            }
+            if(playedCards.get(i).getType().equals("maki2"))
+            {
+                makiRollCount += 2;    
+            }
+            if(playedCards.get(i).getType().equals("maki3"))
+            {
+                makiRollCount += 3;
+            }
+        }
+    }
+    public void sashimiCount()
+    {
+        for(int i = 0;i<playedCards.size();i++)
+        {
+            if(playedCards.get(i).equals("sashimi"))
+            {
+                sashimiCount++;
+            }
+        }
+    }
+    public void tempuraCount()
+    {
+        for(int i = 0;i<playedCards.size();i++)
+        {
+            if(playedCards.get(i).equals("tempura"))
+            {
+                tempuraCount++;
+            }
+        }
+    }
     public String getName() { return name; }
     public int getPlayerIndex() { return playerIndex; }
     public int getScore() { return score; }
-    public void addScore(int delta) { score += delta; }
+    public void addScore(int n) { score += n; }
     public boolean returnHasPlayedCard() { return hasPlayedCard; }
 
     public Hand getHand() { return hand; }
