@@ -345,6 +345,11 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 					cW.setRectangle(cW.getX(), cW.getY());
 					cW.pair();
 					}
+					else
+					{
+						g.drawImage(getCardImage(type),c.setX((500+i*125)),c.setY(y),cardWidth,cardHeight,null);
+						c.setRectangle(c.getX(), c.getY());
+					}
 				}
 				else{
 				g.drawImage(getCardImage(type),c.setX((500+i*125)),c.setY(y),cardWidth,cardHeight,null);
