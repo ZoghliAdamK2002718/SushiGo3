@@ -22,6 +22,39 @@ public class Player {
         this.playerIndex = playerIndex;
         this.score = 0;
     }
+    public boolean hasChopsticks()
+    {
+        for(Card c: playedCards)
+        {
+            if(c.equals("chopsticks"))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    public void removeChopsticks()
+    {
+        for(Card c:playedCards)
+        {
+            if(c.equals("chopsticks"))
+            {
+                playedCards.remove(c);
+                break;
+            }
+        }
+    }
+    public Card getChopsticks()
+    {
+        Card c1 = null;
+        for(Card c:playedCards)
+        {
+            if(c.equals("chopsticks"))
+                c1 = c;
+                return c;
+        }
+        return c1;
+    }
     public void addToPudding(Card c)
     {
         puddings.add(c);
@@ -123,12 +156,6 @@ public class Player {
         selectedIndex = -1;
     }
 
-    public boolean hasChopsticks() {
-        for (Card c : playedCards) {
-            if ("chopsticks".equals(c.getType())) return true;
-        }
-        return false;
-    }
 
     public void useChopsticks() {
         for (int i = 0; i < playedCards.size(); i++) {
