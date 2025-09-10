@@ -13,7 +13,7 @@ public class Card {
 
 	public Card(String t) {
 		this.type = t;
-		coords = new Rectangle(x, y, 100, 140);
+		coords = new Rectangle(x, y, 75, 125);
 	}
 	public boolean equals(String s)
 	{
@@ -57,7 +57,7 @@ public class Card {
 		return y;
 	}
 	public void setRectangle(int x, int y) {
-		coords.setRect(x, y, 100, 140);
+		coords.setRect(x, y, 75, 125);
 	}
 	public Rectangle getRectangle() {
 		return coords;

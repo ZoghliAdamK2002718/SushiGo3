@@ -8,7 +8,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.awt.Rectangle;
 import java.awt.Graphics2D;
-import javax.lang.model.util.ElementScanner14;
+import java.awt.Color;
 
 
 
@@ -29,8 +29,8 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private Deck sushiDeck = new Deck();
 	private int selectedHandIndex;
-	private static final int cardWidth = 100;
-	private static final int cardHeight = 140;
+	private static final int cardWidth = 75;
+	private static final int cardHeight = 125;
 	private int currentPlayerIndex = 0;
 	private int currentRound;
 
@@ -148,78 +148,168 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	};
 	}
 	public void displayOtherPlayerCards(Graphics g) {
-    int spacing = 125;
+    int spacing = 85;
 
     for (int i = 0; i < players.size(); i++) {
         if (i == currentPlayerIndex) continue;
 
         int relativeSeat = (i - currentPlayerIndex + 4) % 4;
-
         Hand h = players.get(i).getHand();
         double angle = seatAngle(relativeSeat);
 
-        for (int j = 0; j < h.size(); j++) {
-            BufferedImage img = getCardImage("back");
-            if (img == null) continue;
+        BufferedImage img = getCardImage("back");
+        if (img == null) continue;
 
-            int centerX = 0, centerY = 0;
+        int n = h.size();
 
-            switch (relativeSeat) {
-                case 1: // Left
-                    centerX = cardHeight / 2 + 20;
-                    centerY = 100 + j * spacing;
-                    break;
-                case 2: // Top
-                    centerX = getWidth() / 2 - (h.size() * spacing) / 2 + j * spacing;
-                    centerY = cardHeight / 2 + 20;
-                    break;
-                case 3: // Right
-                    centerX = getWidth() - cardHeight / 2 - 20;
-                    centerY = 100 + j * spacing;
-                    break;
+        switch (relativeSeat) {
+            case 1: { 
+                int totalHeight = (n - 1) * spacing + cardWidth; 
+                int startY = (getHeight() - totalHeight) / 2;
+                int centerX = cardHeight / 2 + 20;
+
+                for (int j = 0; j < n; j++) {
+                    int centerY = startY + j * spacing + cardWidth / 2;
+                    drawImageRotated(g, img, centerX, centerY, cardWidth, cardHeight, angle);
+                }
+                break;
             }
+            case 2: {
+                int startX = getWidth() / 2 - (n * spacing) / 2;
+                int centerY = cardHeight / 2 + 20;
 
-            drawImageRotated(g, img, centerX, centerY, cardWidth, cardHeight, angle);
-        	}
-    	}
-	}
+                for (int j = 0; j < n; j++) {
+                    int centerX = startX + j * spacing + cardWidth / 2;
+                    drawImageRotated(g, img, centerX, centerY, cardWidth, cardHeight, angle);
+                }
+                break;
+            }
+            case 3: { 
+                int totalHeight = (n - 1) * spacing + cardWidth;
+                int startY = (getHeight() - totalHeight) / 2;
+                int centerX = getWidth() - cardHeight / 2 - 20;
+
+                for (int j = 0; j < n; j++) {
+                    int centerY = startY + j * spacing + cardWidth / 2;
+                    drawImageRotated(g, img, centerX, centerY, cardWidth, cardHeight, angle);
+                }
+                break;
+            }
+        }
+    }
+}
+
 	public void displayOtherPlayerPlayedCards(Graphics g) {
-    int spacing = 125;
+    final int spacing = 85;
 
     for (int i = 0; i < players.size(); i++) {
         if (i == currentPlayerIndex) continue;
 
         int relativeSeat = (i - currentPlayerIndex + 4) % 4;
-
         ArrayList<Card> played = players.get(i).getPlayedCards();
+        if (played.isEmpty()) continue;
+
         double angle = seatAngle(relativeSeat);
+        String name  = players.get(i).getName();
+        int n = played.size();
 
-        for (int j = 0; j < played.size(); j++) {
-            Card c = played.get(j);
-            BufferedImage img = getCardImage(c.getType());
-            if (img == null) continue;
+        switch (relativeSeat) {
+            case 1: { // left
+                int totalH  = (n - 1) * spacing + cardWidth;
+                int startY  = (getHeight() - totalH) / 2;
+                int centerX = cardHeight / 2 + 200;
 
-            int centerX = 0, centerY = 0;
+                for (int j = 0; j < n; j++) {
+                    int cy = startY + j * spacing + cardWidth / 2;
+                    Card c = played.get(j);
+                    drawImageRotated(g, getCardImage(c.getType()), centerX, cy, cardWidth, cardHeight, angle);
+                }
 
-            switch (relativeSeat) {
-                case 1: 
-                    centerX = cardHeight / 2 + 250;
-                    centerY = 100 + j * spacing;
-                    break;
-                case 2: 
-                    centerX = getWidth() / 2 - (played.size() * spacing) / 2 + j * spacing;
-                    centerY = cardHeight / 2 + 250;
-                    break;
-                case 3: 
-                    centerX = getWidth() - cardHeight / 2 - 250;
-                    centerY = 100 + j * spacing;
-                    break;
+                g.setColor(Color.WHITE);
+                g.drawString(name, centerX - cardHeight / 2, startY - 10);
+                break;
             }
-			
-            drawImageRotated(g, img, centerX, centerY, cardWidth, cardHeight, angle);
+
+            case 2: { // top
+                int totalW  = (n - 1) * spacing + cardWidth;
+                int startX  = (getWidth() - totalW) / 2;
+                int centerY = cardHeight / 2 + 200;
+
+                for (int j = 0; j < n; j++) {
+                    int cx = startX + j * spacing + cardWidth / 2;
+                    Card c = played.get(j);
+                    drawImageRotated(g, getCardImage(c.getType()), cx, centerY, cardWidth, cardHeight, angle);
+                }
+
+                g.setColor(Color.WHITE);
+                g.drawString(name, startX, centerY - cardHeight / 2 - 12);
+                break;
+            }
+
+            case 3: { // right
+                int totalH  = (n - 1) * spacing + cardWidth;
+                int startY  = (getHeight() - totalH) / 2;
+                int centerX = getWidth() - cardHeight / 2 - 200;
+
+                for (int j = 0; j < n; j++) {
+                    int cy = startY + j * spacing + cardWidth / 2;
+                    Card c = played.get(j);
+                    drawImageRotated(g, getCardImage(c.getType()), centerX, cy, cardWidth, cardHeight, angle);
+                }
+
+                g.setColor(Color.WHITE);
+                g.drawString(name, centerX + cardHeight / 2 + 8, startY - 10);
+                break;
+            }
         }
+
+        int puddCnt = players.get(i).getPuddingCards() == null ? 0 : players.get(i).getPuddingCards().size();
+        drawCornerPuddingsForSeat(g, relativeSeat, puddCnt); 
     }
 }
+
+private void drawCornerPuddingsForSeat(Graphics g, int relativeSeat, int count) {
+    if (count <= 0) return;
+
+    final int MARGIN = 20;
+    final double SCALE = 0.5;
+
+    int w = (int) (cardWidth  * SCALE); 
+    int h = (int) (cardHeight * SCALE); 
+    int overlap = (int) (h * 0.3);
+    int totalH = (count - 1) * overlap + h;
+
+    double angle = seatAngle(relativeSeat);
+
+    int cx, cy;
+    switch (relativeSeat) {
+        case 1: 
+            cx = w / 2 + MARGIN;
+            cy = MARGIN + totalH / 2;
+            break;
+
+        case 2: 
+            cx = getWidth() - w / 2 - MARGIN;
+            cy = MARGIN + totalH / 2;
+            break;
+
+        case 3: 
+            int pushLeft = h + 24;
+            cx = getWidth() - w / 2 - MARGIN - pushLeft;
+            cy = getHeight() - MARGIN - totalH / 2;
+            break;
+
+        default:
+            return;
+    }
+
+    drawRotatedPuddingStack(g, cx, cy, angle, count);
+}
+
+
+
+
+
 
 
 
@@ -249,7 +339,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 		Hand h = players.get(index).getHand();
 			Card c = h.get(i);
 			String type = c.getType();
-			g.drawImage(getCardImage(type),c.setX((500+i*125)),c.setY(getHeight() - 120),cardWidth,cardHeight,null);
+			g.drawImage(getCardImage(type),c.setX((500+i*85)),c.setY(getHeight() - 120),cardWidth,cardHeight,null);
 			c.setRectangle(c.getX(), c.getY());
 	}
 	public void selectCard(int playerIndex, int handIndex)
@@ -258,8 +348,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	
     repaint();
 	}
-	public void playSelectedCard(int playerIndex) 
-	{
+	public void playSelectedCard(int playerIndex) {
     if (selectedHandIndex < 0) return;
 
     Player p = players.get(playerIndex);
@@ -272,7 +361,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 
     Card played = h.remove(selectedHandIndex);
 
-	if (isNigiri(played) && p.hasWasabi()) {
+    if (isNigiri(played) && p.hasWasabi()) {
         int wasabiIndex = p.getIndexOfWasabi();
         Card wasabi = p.getPlayedCards().get(wasabiIndex);
 
@@ -282,14 +371,17 @@ public class SushiGoPanel extends JPanel implements MouseListener {
             played.pair();
         }
     }
-	if(isPudding(played))
-	{
-		players.get(playerIndex).addToPudding(played);
-	}
-    p.addPlayedCard(played);      
+
+    if (isPudding(played)) {
+        p.addToPudding(played);
+    } else {
+        p.addPlayedCard(played);
+    }
+
     selectedHandIndex = -1;
     repaint();
-	}
+}
+
 	public boolean isPudding(Card c)
 	{
 		if(c.getType().equals("pudding"))
@@ -347,26 +439,34 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 		
 		
 	}
-	public void displayCards(Graphics g,int index)
-	{
-		displayPlayedCards(g, index);
-		displayOtherPlayerCards(g);
-		displayOtherPlayerPlayedCards(g);
-		g. drawString("Current Player: " + players.get(index).getName(), 50, 50);	
-		Hand h = players.get(index).getHand();
-		ArrayList<Card> played = players.get(index).getPlayedCards();
-
-		for(int i = 0;i<h.size();i++)
-		{
-			Card c = h.get(i);
-			String type = c.getType();
-			int y = (i == selectedHandIndex) ? (getHeight() - 140) - 20  : getHeight() - 140;
-			g.drawImage(getCardImage(type),c.setX((500+i*125)),c.setY(y),cardWidth,cardHeight,null);
-			c.setRectangle(c.getX(), c.getY());
-		}
+	public void displayCards(Graphics g, int index) {
+    displayPlayedCards(g, index);
+    displayOtherPlayerCards(g);
+    displayOtherPlayerPlayedCards(g);
 
 
-	}
+    Hand h = players.get(index).getHand();
+    int spacing = 85;
+    int n = h.size();
+
+    int totalWidth = (n > 0 ? (n - 1) * spacing + cardWidth : 0);
+    int startX = (getWidth() - totalWidth) / 2;
+
+    for (int i = 0; i < n; i++) {
+        Card c = h.get(i);
+        String type = c.getType();
+
+        int x = startX + i * spacing;
+        int y = (i == selectedHandIndex) ? (getHeight() - cardHeight - 20) : (getHeight() - cardHeight);
+
+        c.setX(x);
+        c.setY(y);
+        c.setRectangle(x, y);
+
+        g.drawImage(getCardImage(type), x, y, cardWidth, cardHeight, null);
+    }
+}
+
 	private boolean isPairedToWasabi(Card nigiri, ArrayList<Card> playedCards) {
     for (Card c : playedCards) {
         if (c.getType().equals("wasabi") && c.hasPaired() && c.getPairedCard() == nigiri) {
@@ -375,31 +475,47 @@ public class SushiGoPanel extends JPanel implements MouseListener {
     }
     return false;
 	}
-	public void displayPlayedCards(Graphics g, int index) {
-    ArrayList<Card> played = players.get(index).getPlayedCards();
-    int drawnCount = 0; 
+	public void displayPlayedCards(Graphics g, int playerIndex) {
+    ArrayList<Card> played = players.get(playerIndex).getPlayedCards();
+    int spacing = 85;
+    int baseY = getHeight() - 320;
+    int lift = 20;
 
+    int visibleCount = 0;
     for (Card c : played) {
-        String type = c.getType();
-        int x = 500 + drawnCount * 125;
-        int y = (drawnCount == selectedHandIndex) ? (getHeight() - 320) - 20 : getHeight() - 320;
+        if (isNigiri(c) && isPairedToWasabi(c, played)) continue;
+        visibleCount++;
+    }
 
-        if (type.equals("wasabi") && c.hasPaired()) {
+    int totalWidth = (visibleCount > 0 ? (visibleCount - 1) * spacing + cardWidth : 0);
+    int startX = (getWidth() - totalWidth) / 2;
+	g.setColor(Color.WHITE);
+    g.drawString(players.get(playerIndex).getName(), startX, baseY - 12);
+
+    int drawnCount = 0;
+    for (Card c : played) {
+        if (isNigiri(c) && isPairedToWasabi(c, played)) continue;
+
+        String type = c.getType();
+        int x = startX + drawnCount * spacing;
+        boolean isSelected = (drawnCount == selectedHandIndex);
+        int y = isSelected ? (baseY - lift) : baseY;
+
+        if ("wasabi".equals(type) && c.hasPaired()) {
             g.drawImage(getCardImage("wasabi"), x, y, cardWidth, cardHeight, null);
 
             Card nigiri = c.getPairedCard();
             if (nigiri != null) {
-                g.drawImage(getCardImage(nigiri.getType()), x, y - 20, cardWidth, cardHeight, null);
+                g.drawImage(getCardImage(nigiri.getType()), x, y - lift, cardWidth, cardHeight, null);
+                nigiri.setX(x);
+                nigiri.setY(y - lift);
+                nigiri.setRectangle(x, y - lift);
             }
 
             c.setX(x);
             c.setY(y);
             c.setRectangle(x, y);
-            drawnCount++; 
-
-        } else if (isNigiri(c) && isPairedToWasabi(c, played)) {
-            continue;
-
+            drawnCount++;
         } else {
             g.drawImage(getCardImage(type), x, y, cardWidth, cardHeight, null);
             c.setX(x);
@@ -408,7 +524,109 @@ public class SushiGoPanel extends JPanel implements MouseListener {
             drawnCount++;
         }
     }
-	}
+
+    displayPuddings(g, playerIndex);
+}
+
+
+private void displayPuddings(Graphics g, int playerIndex) {
+    ArrayList<Card> puddings = players.get(playerIndex).getPuddingCards();
+    if (puddings == null || puddings.isEmpty()) return;
+
+    double scale = 0.5; 
+    int w = (int) (cardWidth * scale);
+    int h = (int) (cardHeight * scale);
+    int overlap = (int) (h * 0.3); 
+
+
+    int x = getWidth() - w - 20;
+    int startY = getHeight() - (puddings.size() * overlap + h) - 20;
+
+    for (int i = 0; i < puddings.size(); i++) {
+        int y = startY + i * overlap;
+        g.drawImage(getCardImage("pudding"), x, y, w, h, null);
+    }
+}
+
+public void displayOtherPlayerPuddings(Graphics g, int playerIndex, int relativeSeat) {
+    ArrayList<Card> puddings = players.get(playerIndex).getPuddingCards();
+    if (puddings == null || puddings.isEmpty()) return;
+
+    double scale = 0.5;
+    int w = (int)(cardWidth  * scale);
+    int h = (int)(cardHeight * scale);
+    int overlap = (int)(h * 0.3);
+
+    BufferedImage img = getCardImage("pudding");
+    double angle = seatAngle(relativeSeat);
+
+    switch (relativeSeat) {
+        case 1: { // left player – top-left
+            int cx = w / 2 + 20;
+            int top = 20;                       // pixels from top
+            for (int i = 0; i < puddings.size(); i++) {
+                int cy = top + h / 2 + i * overlap;
+                drawImageRotated(g, img, cx, cy, w, h, angle);
+            }
+            break;
+        }
+        case 2: { // top player – top-right
+            int cx = getWidth() - w / 2 - 20;
+            int top = 20;
+            for (int i = 0; i < puddings.size(); i++) {
+                int cy = top + h / 2 + i * overlap;
+                drawImageRotated(g, img, cx, cy, w, h, angle);
+            }
+            break;
+        }
+        case 3: { // right player – bottom-right, shifted UP 25 and RIGHT 15
+            int count  = puddings.size();
+            int totalH = (count - 1) * overlap + h;
+
+            int cx = getWidth() - w / 2 - 20 + 15;                 // right 15
+            int top = getHeight() - totalH - 20 - 25;              // up 25
+
+            for (int i = 0; i < count; i++) {
+                int cy = top + h / 2 + i * overlap;
+                drawImageRotated(g, img, cx, cy, w, h, angle);
+            }
+            break;
+        }
+    }
+}
+
+
+
+private void drawRotatedLabel(Graphics g, String text, int x, int y, double radians) {
+    Graphics2D g2 = (Graphics2D) g.create();
+    g2.setColor(java.awt.Color.WHITE);
+    g2.rotate(radians, x, y);
+    g2.drawString(text, x, y);
+    g2.dispose();
+}
+private void drawRotatedPuddingStack(Graphics g, int cx, int cy, double radians, int count) {
+    if (count <= 0) return;
+    double scale = 0.5;
+    int w = (int)(cardWidth  * scale);
+    int h = (int)(cardHeight * scale);
+    int overlap = (int)(h * 0.3);
+    int totalH = (count - 1) * overlap + h;
+    int startY = cy - totalH / 2;
+
+    BufferedImage img = getCardImage("pudding");
+    for (int i = 0; i < count; i++) {
+        int y = startY + i * overlap;
+        drawImageRotated(g, img, cx, y, w, h, radians);
+    }
+}
+
+
+
+
+
+
+
+
 
 
 }

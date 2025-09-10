@@ -8,7 +8,7 @@ public class Player {
     private int makiRollCount;
     private int sashimiCount;
     private int tempuraCount;
-    private ArrayList<Card> puddings;
+    private ArrayList<Card> puddings = new ArrayList<>();
 
 
     private ArrayList<Card> playedCards = new ArrayList<>();
@@ -82,6 +82,10 @@ public class Player {
                 tempuraCount++;
             }
         }
+    }
+    public ArrayList<Card> getPuddingCards()
+    {
+        return puddings;
     }
     public String getName() { return name; }
     public int getPlayerIndex() { return playerIndex; }
