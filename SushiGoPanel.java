@@ -76,6 +76,16 @@ public class SushiGoPanel extends JPanel implements MouseListener {
     for (int i = 0; i < h.size(); i++) {
         Card c = h.get(i);
         Rectangle r = c.getRectangle();
+        if(players.get(currentPlayerIndex).hasChopsticks())
+        {
+            Rectangle chop = players.get(currentPlayerIndex).getChopsticks().getRectangle();
+            if(chop.contains(x,y))
+            {
+                selectCard();
+                players.get(currentPlayerIndex).removeChopsticks();
+                playSelectedCard(currentPlayerIndex);
+            }
+        }
         if (r != null && r.contains(x, y)) {
 
             if (selectedHandIndex == i) {
@@ -500,7 +510,14 @@ private void drawCornerPuddingsForSeat(Graphics g, int relativeSeat, int count) 
         int x = startX + drawnCount * spacing;
         boolean isSelected = (drawnCount == selectedHandIndex);
         int y = isSelected ? (baseY - lift) : baseY;
-
+        if("chopsticks".equals(type))
+        {
+            g.setColor(java.awt.Color.RED);
+            g.drawRect(x,y-37,90,15);
+            Rectangle chop = new Rectangle(x,y-37,90,15);
+            g.setColor(java.awt.Color.WHITE);
+            g.drawString("Use Chopsticks",x,y-25);
+        }
         if ("wasabi".equals(type) && c.hasPaired()) {
             g.drawImage(getCardImage("wasabi"), x, y, cardWidth, cardHeight, null);
 
