@@ -561,16 +561,16 @@ public void displayOtherPlayerPuddings(Graphics g, int playerIndex, int relative
     double angle = seatAngle(relativeSeat);
 
     switch (relativeSeat) {
-        case 1: { // left player – top-left
+        case 1: {
             int cx = w / 2 + 20;
-            int top = 20;                       // pixels from top
+            int top = 20;               
             for (int i = 0; i < puddings.size(); i++) {
                 int cy = top + h / 2 + i * overlap;
                 drawImageRotated(g, img, cx, cy, w, h, angle);
             }
             break;
         }
-        case 2: { // top player – top-right
+        case 2: { 
             int cx = getWidth() - w / 2 - 20;
             int top = 20;
             for (int i = 0; i < puddings.size(); i++) {
@@ -579,12 +579,12 @@ public void displayOtherPlayerPuddings(Graphics g, int playerIndex, int relative
             }
             break;
         }
-        case 3: { // right player – bottom-right, shifted UP 25 and RIGHT 15
+        case 3: { 
             int count  = puddings.size();
             int totalH = (count - 1) * overlap + h;
 
-            int cx = getWidth() - w / 2 - 20 + 15;                 // right 15
-            int top = getHeight() - totalH - 20 - 25;              // up 25
+            int cx = getWidth() - w / 2 - 20 + 15;                 
+            int top = getHeight() - totalH - 20 - 25;             
 
             for (int i = 0; i < count; i++) {
                 int cy = top + h / 2 + i * overlap;
