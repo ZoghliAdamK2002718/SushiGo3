@@ -120,6 +120,17 @@ public class Player {
     {
         return puddings;
     }
+    public void clearHand()
+    {
+        hand.remove(0);
+    }
+    public void clearPlayed()
+    {
+        for(int i = 0;i<7;i++)
+        {
+            playedCards.remove(0);
+        }
+    }
     public String getName() { return name; }
     public int getPlayerIndex() { return playerIndex; }
     public int getScore() { return score; }

@@ -32,7 +32,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	private static final int cardWidth = 75;
 	private static final int cardHeight = 125;
 	private int currentPlayerIndex = 0;
-	private int currentRound;
+	private int currentRound = 1;
 
 
 	public SushiGoPanel() {
@@ -67,7 +67,24 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 
 		
 	}
-
+    public void runRound(Graphics g)
+    {
+        displayCards(g,currentPlayerIndex);
+    }
+    public void resetRound()
+    {
+        for(int i = 0;i<players.size();i++)
+        {
+            Hand tempHand = new Hand();
+            for(int j = 0;j<9;j++)
+            {
+                tempHand.add(sushiDeck.remove(0));
+            }
+            players.get(i).clearHand();
+            players.get(i).clearPlayed();
+            players.get(i).setHand(tempHand);
+        }
+    }
 	@Override
 	public void mouseClicked(MouseEvent e) {
     int x = e.getX(), y = e.getY();
@@ -76,16 +93,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
     for (int i = 0; i < h.size(); i++) {
         Card c = h.get(i);
         Rectangle r = c.getRectangle();
-        if(players.get(currentPlayerIndex).hasChopsticks())
-        {
-            Rectangle chop = players.get(currentPlayerIndex).getChopsticks().getRectangle();
-            if(chop.contains(x,y))
-            {
-                selectCard();
-                players.get(currentPlayerIndex).removeChopsticks();
-                playSelectedCard(currentPlayerIndex);
-            }
-        }
+        
         if (r != null && r.contains(x, y)) {
 
             if (selectedHandIndex == i) {
@@ -101,11 +109,13 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 					passCardstoLeft();
 					if(players.get(0).hasOneCard())
 					{
-						for(int j = 0;j<players.size();j++)
-						{
-
-						}
 						System.out.println("Round over. Calculate scores and start new round.");
+                        if(currentRound<4)
+                        {
+                            resetRound();
+                            currentRound++;
+                            
+                        }
 					}
 					
 				}
@@ -444,7 +454,8 @@ private void drawCornerPuddingsForSeat(Graphics g, int relativeSeat, int count) 
 		super.paint(g);
 		g.setColor(java.awt.Color.BLACK);
     	g.fillRect(0, 0, getWidth(), getHeight());
-		displayCards(g,currentPlayerIndex);
+        for(int i = 0;i<3;i++)
+        runRound(g);
 		
 		
 		
