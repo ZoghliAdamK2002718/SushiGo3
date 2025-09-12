@@ -12,6 +12,7 @@ public class Player {
 
 
     private ArrayList<Card> playedCards = new ArrayList<>();
+    private ArrayList<Card> pendingCards = new ArrayList<>();
 
     private int selectedIndex = -1;
     private boolean hasPlayedCard = false;
@@ -22,38 +23,25 @@ public class Player {
         this.playerIndex = playerIndex;
         this.score = 0;
     }
-    public boolean hasChopsticks()
-    {
-        for(Card c: playedCards)
-        {
-            if(c.equals("chopsticks"))
-            {
-                return true;
-            }
+    public boolean hasChopsticks() {
+        for (Card c : playedCards) {
+            if ("chopsticks".equals(c.getType())) return true;
         }
         return false;
     }
-    public void removeChopsticks()
-    {
-        for(Card c:playedCards)
-        {
-            if(c.equals("chopsticks"))
-            {
-                playedCards.remove(c);
-                break;
+    public void removeChopsticks() {
+        for (int i = 0; i < playedCards.size(); i++) {
+            if ("chopsticks".equals(playedCards.get(i).getType())) {
+                playedCards.remove(i);
+                return;
             }
         }
     }
-    public Card getChopsticks()
-    {
-        Card c1 = null;
-        for(Card c:playedCards)
-        {
-            if(c.equals("chopsticks"))
-                c1 = c;
-                return c;
+    public Card getChopsticks() {
+        for (Card c : playedCards) {
+            if ("chopsticks".equals(c.getType())) return c;
         }
-        return c1;
+        return null;
     }
     public void addToPudding(Card c)
     {
@@ -73,6 +61,15 @@ public class Player {
     public int getIndexOfWasabi() {
         for(int i = 0;i<playedCards.size();i++) {
             if(playedCards.get(i).getType().equals("wasabi")) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    public int getUnpairedWasabiIndex() {
+        for (int i = 0; i < playedCards.size(); i++) {
+            Card c = playedCards.get(i);
+            if ("wasabi".equals(c.getType()) && !c.hasPaired()) {
                 return i;
             }
         }
@@ -122,14 +119,13 @@ public class Player {
     }
     public void clearHand()
     {
-        hand.remove(0);
+        if (hand != null) {
+            hand.clear();
+        }
     }
     public void clearPlayed()
     {
-        for(int i = 0;i<7;i++)
-        {
-            playedCards.remove(0);
-        }
+        playedCards.clear();
     }
     public String getName() { return name; }
     public int getPlayerIndex() { return playerIndex; }
@@ -193,4 +189,9 @@ public class Player {
     {
         playedCards.add(c);
     }
+    public void addPendingCard(Card c) {
+        pendingCards.add(c);
+    }
+    public ArrayList<Card> getPendingCards() { return pendingCards; }
+    public void clearPending() { pendingCards.clear(); }
 }
