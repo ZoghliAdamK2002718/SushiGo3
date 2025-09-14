@@ -1,6 +1,7 @@
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import java.awt.event.MouseEvent;
@@ -31,6 +32,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 	private BufferedImage squidn;
 	private BufferedImage salmonn;
 	private BufferedImage back;
+	private BufferedImage bg;
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private Deck sushiDeck = new Deck();
 	private int selectedHandIndex;
@@ -52,7 +54,7 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 
 
 	public SushiGoPanel() {
-		try {
+        try {
 			dumpling = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_dumpling.jpg"));
 			sashimi = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_sashimi.jpg"));
 			tempura = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_tempura.jpg"));
@@ -65,10 +67,11 @@ public class SushiGoPanel extends JPanel implements MouseListener {
 			salmonn = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_salmonn.jpg"));
 			squidn = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_squidn.jpg"));
 			pudding = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_pudding.jpg"));
-			back = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_back.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
-			}
+            back = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_back.jpg"));
+            bg = ImageIO.read(SushiGoPanel.class.getResource("/images/sushigo_bg1.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            }
         addMouseListener(this);
         setOpaque(true);
         selectedHandIndex = -1;
@@ -391,15 +394,16 @@ public class SushiGoPanel extends JPanel implements MouseListener {
     }
 }
 
-	public void displayOtherPlayerPlayedCards(Graphics g) {
-    final int spacing = 85;
+    public void displayOtherPlayerPlayedCards(Graphics g) {
+        final int spacing = 85;
 
-    for (int i = 0; i < players.size(); i++) {
-        if (i == currentPlayerIndex) continue;
+        for (int i = 0; i < players.size(); i++) {
+            if (i == currentPlayerIndex) continue;
 
-        int relativeSeat = (i - currentPlayerIndex + 4) % 4;
-        ArrayList<Card> played = players.get(i).getPlayedCards();
-        if (played.isEmpty()) continue;
+            int relativeSeat = (i - currentPlayerIndex + 4) % 4;
+            ArrayList<Card> played = players.get(i).getPlayedCards();
+            int pendingCount = players.get(i).getPendingCards() == null ? 0 : players.get(i).getPendingCards().size();
+            if (played.isEmpty() && pendingCount == 0) continue;
 
         double angle = seatAngle(relativeSeat);
         String name  = players.get(i).getName();
@@ -425,6 +429,13 @@ public class SushiGoPanel extends JPanel implements MouseListener {
                     } else {
                         drawImageRotated(g, getCardImage(c.getType()), centerX, cy, cardWidth, cardHeight, angle);
                     }
+                    drawn++;
+                }
+
+                // Draw backs for any pending (hidden) cards this turn
+                for (int p = 0; p < pendingCount; p++) {
+                    int cy = startY + drawn * spacing + cardWidth / 2;
+                    drawImageRotated(g, getCardImage("back"), centerX, cy, cardWidth, cardHeight, angle);
                     drawn++;
                 }
 
@@ -455,6 +466,13 @@ public class SushiGoPanel extends JPanel implements MouseListener {
                     drawn++;
                 }
 
+                // Draw backs for any pending (hidden) cards this turn
+                for (int p = 0; p < pendingCount; p++) {
+                    int cx = startX + drawn * spacing + cardWidth / 2;
+                    drawImageRotated(g, getCardImage("back"), cx, centerY, cardWidth, cardHeight, angle);
+                    drawn++;
+                }
+
                 g.setColor(Color.WHITE);
                 g.drawString(name, startX, centerY - cardHeight / 2 - 12);
                 break;
@@ -482,6 +500,13 @@ public class SushiGoPanel extends JPanel implements MouseListener {
                     drawn++;
                 }
 
+                // Draw backs for any pending (hidden) cards this turn
+                for (int p = 0; p < pendingCount; p++) {
+                    int cy = startY + drawn * spacing + cardWidth / 2;
+                    drawImageRotated(g, getCardImage("back"), centerX, cy, cardWidth, cardHeight, angle);
+                    drawn++;
+                }
+                
                 g.setColor(Color.WHITE);
                 g.drawString(name, centerX + cardHeight / 2 + 8, startY - 10);
                 break;
@@ -499,8 +524,8 @@ private void drawCornerPuddingsForSeat(Graphics g, int relativeSeat, int count) 
     final int MARGIN = 20;
     final double SCALE = 0.5;
 
-    int w = (int) (cardWidth  * SCALE); 
-    int h = (int) (cardHeight * SCALE); 
+    int w = (int) (cardWidth  * SCALE);
+    int h = (int) (cardHeight * SCALE);
     int overlap = (int) (h * 0.3);
     int totalH = (count - 1) * overlap + h;
 
@@ -508,17 +533,17 @@ private void drawCornerPuddingsForSeat(Graphics g, int relativeSeat, int count) 
 
     int cx, cy;
     switch (relativeSeat) {
-        case 1: 
+        case 1:
             cx = w / 2 + MARGIN;
             cy = MARGIN + totalH / 2;
             break;
 
-        case 2: 
+        case 2:
             cx = getWidth() - w / 2 - MARGIN;
             cy = MARGIN + totalH / 2;
             break;
 
-        case 3: 
+        case 3:
             int pushLeft = h + 24;
             cx = getWidth() - w / 2 - MARGIN - pushLeft;
             cy = getHeight() - MARGIN - totalH / 2;
@@ -653,8 +678,7 @@ private void drawCornerPuddingsForSeat(Graphics g, int relativeSeat, int count) 
     public void paintComponent(Graphics g)
     {
         super.paintComponent(g);
-        g.setColor(java.awt.Color.BLACK);
-        g.fillRect(0, 0, getWidth(), getHeight());
+        g.drawImage(bg, 0, 0, getWidth(), getHeight(), null);
         chopsticksButtonRect = null;
 
         if (phase == Phase.START) {
@@ -771,11 +795,11 @@ private void drawCornerPuddingsForSeat(Graphics g, int relativeSeat, int count) 
     }
     return false;
 	}
-	public void displayPlayedCards(Graphics g, int playerIndex) {
-    ArrayList<Card> played = players.get(playerIndex).getPlayedCards();
-    int spacing = 85;
-    int baseY = getHeight() - 320;
-    int lift = 20;
+    public void displayPlayedCards(Graphics g, int playerIndex) {
+        ArrayList<Card> played = players.get(playerIndex).getPlayedCards();
+        int spacing = 85;
+        int baseY = getHeight() - 320;
+        int lift = 20;
     if (playerIndex == currentPlayerIndex) {
         chopsticksButtonRect = null;
     }
@@ -792,63 +816,78 @@ private void drawCornerPuddingsForSeat(Graphics g, int relativeSeat, int count) 
     g.drawString(players.get(playerIndex).getName(), startX, baseY - 12);
 
     int drawnCount = 0;
-    for (Card c : played) {
-        if (isNigiri(c) && isPairedToWasabi(c, played)) continue;
+        for (Card c : played) {
+            if (isNigiri(c) && isPairedToWasabi(c, played)) continue;
 
-        String type = c.getType();
-        int x = startX + drawnCount * spacing;
-        int y = baseY;
-        if("chopsticks".equals(type))
-        {
-            g.setColor(java.awt.Color.RED);
-            g.drawRect(x,y-37,90,15);
-            Rectangle chop = new Rectangle(x,y-37,90,15);
-            if (playerIndex == currentPlayerIndex) {
-                chopsticksButtonRect = chop;
+            String type = c.getType();
+            int x = startX + drawnCount * spacing;
+            int y = baseY;
+            if("chopsticks".equals(type))
+            {
+                g.setColor(java.awt.Color.RED);
+                g.drawRect(x,y-37,90,15);
+                Rectangle chop = new Rectangle(x,y-37,90,15);
+                if (playerIndex == currentPlayerIndex) {
+                    chopsticksButtonRect = chop;
+                }
+                g.setColor(java.awt.Color.WHITE);
+                g.drawString("Use Chopsticks",x,y-25);
             }
-            g.setColor(java.awt.Color.WHITE);
-            g.drawString("Use Chopsticks",x,y-25);
-        }
-        if ("wasabi".equals(type) && c.hasPaired()) {
-            g.drawImage(getCardImage("wasabi"), x, y, cardWidth, cardHeight, null);
+            if ("wasabi".equals(type) && c.hasPaired()) {
+                g.drawImage(getCardImage("wasabi"), x, y, cardWidth, cardHeight, null);
 
-            Card nigiri = c.getPairedCard();
-            if (nigiri != null) {
-                g.drawImage(getCardImage(nigiri.getType()), x, y - lift, cardWidth, cardHeight, null);
-                nigiri.setX(x);
-                nigiri.setY(y - lift);
-                nigiri.setRectangle(x, y - lift);
+                Card nigiri = c.getPairedCard();
+                if (nigiri != null) {
+                    g.drawImage(getCardImage(nigiri.getType()), x, y - lift, cardWidth, cardHeight, null);
+                    nigiri.setX(x);
+                    nigiri.setY(y - lift);
+                    nigiri.setRectangle(x, y - lift);
+                }
+
+                c.setX(x);
+                c.setY(y);
+                c.setRectangle(x, y);
+                drawnCount++;
+            } else {
+                g.drawImage(getCardImage(type), x, y, cardWidth, cardHeight, null);
+                c.setX(x);
+                c.setY(y);
+                c.setRectangle(x, y);
+                drawnCount++;
             }
+        }
 
-            c.setX(x);
-            c.setY(y);
-            c.setRectangle(x, y);
-            drawnCount++;
-        } else {
-            g.drawImage(getCardImage(type), x, y, cardWidth, cardHeight, null);
-            c.setX(x);
-            c.setY(y);
-            c.setRectangle(x, y);
+        // Draw backs for any pending (hidden) cards this turn for this player
+        int pendingCount = players.get(playerIndex).getPendingCards() == null ? 0 : players.get(playerIndex).getPendingCards().size();
+        for (int p = 0; p < pendingCount; p++) {
+            int x = startX + drawnCount * spacing;
+            int y = baseY;
+            g.drawImage(getCardImage("back"), x, y, cardWidth, cardHeight, null);
             drawnCount++;
         }
+
+        displayPuddings(g, playerIndex);
     }
-
-    displayPuddings(g, playerIndex);
-}
 
 
 private void displayPuddings(Graphics g, int playerIndex) {
     ArrayList<Card> puddings = players.get(playerIndex).getPuddingCards();
     if (puddings == null || puddings.isEmpty()) return;
 
-    double scale = 0.5; 
+    double scale = 0.5;
     int w = (int) (cardWidth * scale);
     int h = (int) (cardHeight * scale);
-    int overlap = (int) (h * 0.3); 
+    int overlap = (int) (h * 0.3);
 
+    // Place near the current player's hand row
+    Hand hand = players.get(playerIndex).getHand();
+    int n = hand == null ? 0 : hand.size();
+    int spacing = 85;
+    int totalWidth = (n > 0 ? (n - 1) * spacing + cardWidth : 0);
+    int handStartX = (getWidth() - totalWidth) / 2;
 
-    int x = getWidth() - w - 20;
-    int startY = getHeight() - (puddings.size() * overlap + h) - 20;
+    int x = handStartX - w - 20; // just to the left of the hand
+    int startY = getHeight() - (puddings.size() * overlap + h) - 20; // bottom stacked
 
     for (int i = 0; i < puddings.size(); i++) {
         int y = startY + i * overlap;
